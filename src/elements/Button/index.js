@@ -1,68 +1,59 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
 
-export default function Button({
-  className: classNameProps,
-  onClick: onClickProps,
-  type: typeProps,
-  href: hrefProps,
-  style: styleProps,
-  target: targetProps,
-  isDisabled,
-  isLoading,
-  children,
-  isExternal,
-  isPrimary,
-  isLarge,
-  isSmall,
-  isBlock,
-  hasShadow,
-}) {
-  const className = [classNameProps];
-  if (isPrimary) className.push('btn-primary');
-  if (isLarge) className.push('btn-lg');
-  if (isSmall) className.push('btn-sm');
-  if (isBlock) className.push('btn-block');
-  if (hasShadow) className.push('btn-block');
+export default function Button(props) {
+  const className = [props.className];
+  if (props.isPrimary) className.push('btn-primary');
+  if (props.isLight) className.push('btn-light');
+  if (props.isLarge) className.push('btn-lg');
+  if (props.isSmall) className.push('btn-sm');
+  if (props.isBlock) className.push('btn-block');
+  if (props.hasShadow) className.push('btn-shadow');
 
   const onClick = () => {
-    if (onClickProps) onClickProps();
+    if (props.onClick) props.onClick();
   };
 
-  if (isDisabled || isLoading) {
-    if (isDisabled) className.push('disabled');
+  if (props.isDisabled || props.isLoading) {
+    if (props.isDisabled) className.push('disabled');
     return (
-      <span className={className.join(' ')} style={styleProps}>
-        {isLoading ? (
+      <span className={className.join(' ')} style={props.style}>
+        {props.isLoading ? (
           <>
             <span className="spinner-border spinner-border-sm mx-5"></span>
             <span className="sr-only">Loading...</span>
           </>
         ) : (
-          children
+          props.children
         )}
       </span>
     );
   }
 
-  if (typeProps === 'link') {
-    if (isExternal) {
+  if (props.type === 'link') {
+    if (props.isExternal) {
       return (
         // eslint-disable-next-line react/jsx-no-target-blank
         <a
+          href={props.href}
           className={className.join(' ')}
-          style={styleProps}
-          target={targetProps === '_blank' ? '_blank' : undefined}
-          rel={targetProps === '_blank' ? 'noopener noreferrer' : undefined}
-          href={hrefProps}
+          style={props.style}
+          target={props.target === '_blank' ? '_blank' : undefined}
+          rel={props.target === '_blank' ? 'noopener noreferrer' : undefined}
         >
-          {children}
+          {props.children}
         </a>
       );
     } else {
       return (
-        <Link to={hrefProps} className={className.join(' ')} style={styleProps}>
-          {children}
+        <Link
+          to={props.href}
+          className={className.join(' ')}
+          style={props.style}
+          onClick={onClick}
+        >
+          {props.children}
         </Link>
       );
     }
@@ -71,24 +62,27 @@ export default function Button({
   return (
     <button
       className={className.join(' ')}
-      style={styleProps}
+      style={props.style}
       onClick={onClick}
     >
-      {children}
+      {props.children}
     </button>
   );
 }
 
 Button.propTypes = {
-  type: PropTypes.oneOf(['button', 'link']),
-  onClick: PropTypes.func,
-  target: PropTypes.string,
-  className: PropTypes.string,
-  isDisabled: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  isSmall: PropTypes.bool,
-  isLarge: PropTypes.bool,
-  isBlock: PropTypes.bool,
-  isExternal: PropTypes.bool,
-  hasShadow: PropTypes.bool,
+  type: propTypes.oneOf(['button', 'link']),
+  onClick: propTypes.func,
+  href: propTypes.string,
+  target: propTypes.string,
+  className: propTypes.string,
+  isPrimary: propTypes.bool,
+  isLight: propTypes.bool,
+  isExternal: propTypes.bool,
+  isDisabled: propTypes.bool,
+  isLoading: propTypes.bool,
+  isSmall: propTypes.bool,
+  isLarge: propTypes.bool,
+  isBlock: propTypes.bool,
+  hasShadow: propTypes.bool,
 };
